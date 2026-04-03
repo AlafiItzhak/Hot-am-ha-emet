@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>חותם האמת | יצחק עלפי</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y4RL09953M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Y4RL09953M');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Noto+Serif+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -179,7 +187,70 @@
   .divider { display: flex; align-items: center; gap: 1.5rem; margin: 3rem auto; max-width: 200px; color: var(--gold-dim); font-size: 1.2rem; }
   .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gold-dim); }
 
-  /* FOOTER */
+  /* COMMENT FORM */
+  .comment-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .comment-title {
+    font-size: 1.1rem; color: var(--gold); margin-bottom: 1.5rem; font-weight: 700;
+  }
+  .comment-form { display: flex; flex-direction: column; gap: 1rem; }
+  .comment-form input,
+  .comment-form textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--cream);
+    padding: 0.85rem 1rem;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1rem;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+    width: 100%;
+    resize: vertical;
+  }
+  .comment-form input:focus,
+  .comment-form textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .comment-form input::placeholder,
+  .comment-form textarea::placeholder { color: var(--cream-dim); opacity: 0.6; }
+  .comment-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:600px){ .comment-form .form-row { grid-template-columns: 1fr; } }
+  .comment-submit {
+    background: var(--gold); color: var(--dark);
+    border: none; padding: 0.85rem 2rem;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+    align-self: flex-start;
+    border-radius: 2px;
+  }
+  .comment-submit:hover { background: var(--gold-light); }
+  .comment-success {
+    display: none;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    padding: 1rem 1.5rem;
+    border-radius: 2px;
+    font-size: 0.95rem;
+  }
+
+  /* REGISTER FORM */
+  .register-section {
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 2.5rem;
+    margin-top: 3rem;
+    border-radius: 2px;
+  }
+  .register-title { font-size: 1.2rem; color: var(--gold); font-weight: 700; margin-bottom: 0.5rem; }
+  .register-subtitle { font-size: 0.9rem; color: var(--cream-dim); margin-bottom: 1.5rem; }
+
+
   footer { background: var(--dark2); border-top: 1px solid rgba(201,168,76,0.1); text-align: center; padding: 3rem 2rem; }
   .footer-seal { font-size: 2rem; color: var(--gold-dim); margin-bottom: 0.8rem; }
 
@@ -317,6 +388,26 @@
       </p>
       <div class="divider">✦</div>
       <p class="prose" style="text-align:center;">הספר הזה אינו מורה שבא ללמד. הוא אח למסע.</p>
+    </div>
+  </section>
+
+  <!-- REGISTER SECTION -->
+  <section>
+    <div class="section">
+      <div class="register-section">
+        <p class="register-title">✦ הישאר מעודכן</p>
+        <p class="register-subtitle">השאר פרטים ואעדכן אותך בחידושים, תוכן נוסף ואירועים</p>
+        <form class="comment-form" action="https://formspree.io/f/xdapwwja" method="POST" onsubmit="handleRegister(event, this)">
+          <input type="hidden" name="סוג" value="הרשמה מהדף הראשי">
+          <div class="form-row">
+            <input type="text" name="שם" placeholder="שם מלא" required>
+            <input type="tel" name="טלפון" placeholder="טלפון">
+          </div>
+          <input type="email" name="מייל" placeholder="כתובת מייל" required>
+          <button type="submit" class="comment-submit">הירשם →</button>
+          <div class="comment-success">תודה! קיבלתי את הפרטים שלך 🙏</div>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -867,6 +958,7 @@ function openChapter(idx) {
   const content = document.getElementById('chapter-content');
   const prev = idx > 0 ? idx - 1 : null;
   const next = idx < chapters.length - 1 ? idx + 1 : null;
+
   content.innerHTML = `
     <div class="chapter-page active">
       <p class="chapter-num-label">${ch.num} | ${ch.gate}</p>
@@ -876,14 +968,72 @@ function openChapter(idx) {
         ${ch.cite ? `<cite>${ch.cite}</cite>` : ''}
       </blockquote>
       <div class="chapter-body">${ch.body}</div>
+
       <div class="chapter-nav">
         ${next !== null ? `<button class="btn" onclick="openChapter(${next})" style="font-size:0.9rem;">הפרק הבא ←</button>` : '<span></span>'}
         ${prev !== null ? `<button class="btn" onclick="openChapter(${prev})" style="font-size:0.9rem;">→ הפרק הקודם</button>` : '<span></span>'}
       </div>
+
+      <!-- COMMENT FORM -->
+      <div class="comment-section">
+        <p class="comment-title">💬 השאר הערה על הפרק</p>
+        <form class="comment-form" action="https://formspree.io/f/xdapwwja" method="POST" onsubmit="handleComment(event, this)">
+          <input type="hidden" name="פרק" value="${ch.num} – ${ch.title}">
+          <div class="form-row">
+            <input type="text" name="שם" placeholder="שם (אופציונלי)">
+            <input type="email" name="מייל" placeholder="מייל (אופציונלי)">
+          </div>
+          <textarea name="הערה" rows="4" placeholder="מה עלה לך בזמן הקריאה? שאלה, תובנה, רגש..." required></textarea>
+          <button type="submit" class="comment-submit">שלח הערה →</button>
+          <div class="comment-success">תודה על ההערה! 🙏 קיבלתי אותה.</div>
+        </form>
+      </div>
+
     </div>
   `;
+
   document.body.classList.add('reading');
   window.scrollTo(0, 0);
+
+  // Google Analytics – מעקב קריאת פרק
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'chapter_view', {
+      'event_category': 'קריאה',
+      'event_label': ch.title,
+      'value': idx + 1
+    });
+  }
+}
+
+function handleComment(e, form) {
+  e.preventDefault();
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(r => {
+    if (r.ok) {
+      form.reset();
+      form.querySelector('.comment-success').style.display = 'block';
+    }
+  });
+}
+
+function handleRegister(e, form) {
+  e.preventDefault();
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(r => {
+    if (r.ok) {
+      form.reset();
+      form.querySelector('.comment-success').style.display = 'block';
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'registration', { 'event_category': 'הרשמה' });
+      }
+    }
+  });
 }
 
 function showHome() {
